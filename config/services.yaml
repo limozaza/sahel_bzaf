@@ -8,6 +8,7 @@ services:
         public: false       # Allows optimizing the container by removing unused services; this also means
         bind:
             $imageFolder: '%imageFolder%'
+            $mail: '%env(MAILER_ADDRESS)%'
 
     App\:
         resource: '../src/*'
@@ -16,5 +17,13 @@ services:
     App\UI\Action\:
         resource: '../src/UI/Action'
         tags: ['controller.service_arguments']
+
+
+
+    app.user_listener:
+        class: App\Listener\UserCreatedListener
+        tags:
+            - { name: kernel.event_listener, event: 'user.created', method: onUserCreated }
+
 
 
