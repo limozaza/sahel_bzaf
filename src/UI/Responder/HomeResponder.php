@@ -1,6 +1,8 @@
 <?php
 namespace App\UI\Responder;
 use App\UI\Responder\Interfaces\HomeResponderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
@@ -19,11 +21,13 @@ class HomeResponder implements HomeResponderInterface
         $this->twig = $environment;
     }
 
-    public function __invoke()
+    public function __invoke($redirect = false, FormInterface $addArticleType = null)
     {
-        return new Response(
-            $this->twig->render('default/index.html.twig')
-        );
+        $response = null;
+        $redirect
+            ? $response =  new RedirectResponse('/')
+            : $response = new Response($this->twig->render('default/index.html.twig',['form'=> $addArticleType->createView()]));
+        return $response;
     }
 
 }
